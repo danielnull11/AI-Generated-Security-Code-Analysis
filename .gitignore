@@ -1,0 +1,15 @@
+.env
+.env.*
+!.env.example
+portfolio.db
+*.db
+*.sqlite*
+__pycache__/
+*.py[cod]
+.DS_Store
+__MACOSX/
+static/uploads/*
+!static/uploads/.gitkeep
+.venv/
+venv/
+.pytest_cache/
