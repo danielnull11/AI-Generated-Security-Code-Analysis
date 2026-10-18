@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Dashboard — Photo Portfolio{% endblock %}
+{% block nav_extra %}<span class="text-neutral-500">{{ admin.username }}</span>
+<a href="/admin/logout" class="hover:text-white">Log out</a>{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+<section class="lg:col-span-1">
+<h1 class="text-2xl font-semibold">Upload a photo</h1>
+<p class="mt-2 text-sm text-neutral-400">Camera make and model are extracted from EXIF automatically.</p>
+<form method="post" action="/admin/upload" enctype="multipart/form-data" class="mt-6 space-y-4">
+<div><label for="title">Title</label><input id="title" name="title" required class="w-full rounded-lg bg-neutral-900 px-3 py-2" /></div>
+<div><label for="description">Description</label><textarea id="description" name="description" rows="3" class="w-full rounded-lg bg-neutral-900 px-3 py-2"></textarea></div>
+<div><label for="file">Image file</label><input id="file" name="file" type="file" accept="image/*" required class="w-full text-sm" /></div>
+<button type="submit" class="w-full rounded-lg bg-white px-4 py-2 font-medium text-neutral-900">Upload</button>
+</form></section>
+<section class="lg:col-span-2"><div class="flex items-baseline justify-between"><h2 class="text-2xl font-semibold">Photos</h2>
+<span class="text-sm text-neutral-500">{{ photos|length }} total</span></div>
+{% if photos %}<ul class="mt-6 divide-y divide-neutral-800 border-y border-neutral-800">
+{% for photo in photos %}<li class="flex items-center gap-4 py-4">
+<img src="/static/uploads/{{ photo.filename }}" alt="{{ photo.title }}" class="h-16 w-16 rounded-lg object-cover" />
+<div class="min-w-0 flex-1"><a href="/photos/{{ photo.id }}" class="font-medium hover:underline">{{ photo.title }}</a>
+<p class="truncate text-xs text-neutral-500">{{ photo.exif_make or 'Unknown make' }} · {{ photo.exif_model or 'Unknown model' }}</p></div>
+<form method="post" action="/admin/photos/{{ photo.id }}/delete"><button type="submit" class="rounded-lg px-3 py-1.5 text-sm text-red-300">Delete</button></form>
+</li>{% endfor %}</ul>
+{% else %}<p class="mt-6 text-neutral-400">No photos uploaded yet.</p>{% endif %}
+</section></div>{% endblock %}
