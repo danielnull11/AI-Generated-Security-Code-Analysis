@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}{{ photo.title }} — Photo Portfolio{% endblock %}
+{% block content %}
+<a href="/" class="text-sm text-neutral-400">&larr; Back to gallery</a>
+<div class="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-10">
+<div class="lg:col-span-2 overflow-hidden rounded-xl ring-1 ring-neutral-800 bg-neutral-900">
+<img src="/static/uploads/{{ photo.filename }}" alt="{{ photo.title }}" class="w-full object-contain max-h-[75vh]" /></div>
+<aside><h1 class="text-3xl font-semibold tracking-tight">{{ photo.title }}</h1>
+{% if photo.description %}<p class="mt-4 text-neutral-400 leading-relaxed">{{ photo.description }}</p>{% endif %}
+<dl class="mt-8 divide-y divide-neutral-800 border-t border-neutral-800 text-sm">
+<div class="flex justify-between py-3"><dt>Camera make</dt><dd>{{ photo.exif_make or '—' }}</dd></div>
+<div class="flex justify-between py-3"><dt>Camera model</dt><dd>{{ photo.exif_model or '—' }}</dd></div>
+<div class="flex justify-between py-3"><dt>Uploaded</dt><dd>{{ photo.created_at.strftime('%b %d, %Y') }}</dd></div>
+</dl></aside></div>{% endblock %}
