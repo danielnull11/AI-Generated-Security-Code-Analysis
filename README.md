@@ -4,11 +4,8 @@
 
 ## Why I started this
 
-AI coding assistants make it possible to build and deploy web applications quickly, even without closely reviewing every line of generated code. But an app working as expected doesn't necessarily mean it's secure.
-
-I started this project to see what security issues I could identify in an AI-generated web app, then learn how to fix and test them before deployment.
-
-> **My own notes:** I'll expand this section with what originally made me curious about the security risks of AI-generated applications.
+I started this project to see what security issues I could identify in an AI generated web app, then learn how to fix and test them before deployment.
+A lot of people are using coding agents to build websites and applications incredibly fast, but nobody talks about the security risks and how to secure them before publishing them. 
 
 ## What I built
 
