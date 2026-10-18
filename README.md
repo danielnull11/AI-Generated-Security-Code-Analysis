@@ -1,46 +1,45 @@
 # AI-Generated Code Security Analysis
 
-**Independent AppSec Project · In Progress**
+**Independent project · In progress**
 
-Can an AI-generated application work correctly while retaining overlooked security flaws? This project audits a locally controlled, AI-generated photo portfolio app. The baseline application, initial code review, and developer-reported manual experiments are complete. Remediation is **planned, not implemented**.
+## Why I started this
 
-## Baseline
-Python · FastAPI · SQLite / SQLAlchemy · Jinja2 · Pillow / EXIF · JWT cookies · bcrypt · Docker · ExifTool (testing).
+AI coding assistants make it possible to build and deploy web applications quickly, even without closely reviewing every line of generated code. But an app working as expected doesn't necessarily mean it's secure.
 
-```mermaid
-flowchart LR
-A[Browser] --> B[FastAPI routes]
-B --> C[Jinja2 templates]
-B --> D[JWT cookie auth]
-B --> E[SQLite]
-B --> F[Image upload]
-F --> G[Pillow EXIF parser]
-G --> E
-```
+I started this project to see what security issues I could identify in an AI-generated web app, then learn how to fix and test them before deployment.
 
-## Findings in current unpatched code
+> **My own notes:** I'll expand this section with what originally made me curious about the security risks of AI-generated applications.
 
-| ID | Issue | Evidence |
-| --- | --- | --- |
-| SEC-001 | Predictable JWT development key fallback | `auth.py:13` |
-| SEC-002a | Raw EXIF metadata saved without sanitization | `routers/admin.py:37–54,145–154` |
-| SEC-002b | Extension-based upload checks | `routers/admin.py:133–143` |
-| SEC-003 | No explicit CSRF tokens on state-changing forms | Code review; exploit untested |
-| SEC-004 | No explicit application upload-size cap | Code review; DoS untested |
-| SEC-005 | Container lacks non-root `USER` | `Dockerfile` |
+## What I built
 
-**Proof-of-concept status:** I tested EXIF metadata injection and uploading a non-image file renamed `.jpg`. The reviewed ZIP did not retain the injected database row or disguised file, so those PoCs are **author-reported, not independently reproduced from this snapshot**.
+I generated a functional photography portfolio application using Python and FastAPI. It includes a photo gallery, admin login, image uploads, camera metadata extraction, and a SQLite database.
 
-**Stored XSS clarification:** The backend persists untrusted EXIF strings. Current Jinja2 output auto-escapes HTML, so **browser-executed stored XSS has not been demonstrated**. The concern is unsafe metadata storage and possible second-order XSS in a future unsafe output sink.
+## What I've tested so far
 
-Read the [full security assessment](SECURITY_AUDIT.md) for line references, evidence limits, and next steps.
+I reviewed the backend for common security issues and focused my first tests on two areas:
 
-## Planned security fixes (not yet applied)
-- Apply `html.escape()` to EXIF values as an additional defense while retaining context-aware output escaping.
-- Use `PIL.Image.verify()`, decoded image-format allowlisting and byte limits; reject invalid uploads with HTTP 415 and clean up files.
-- Require secure JWT secrets from the environment.
-- Add a non-root Docker `appuser`; evaluate CSRF controls.
-- Rerun documented tests and attach before/after evidence.
+- **File uploads:** The code checks file extensions without validating the actual image contents. In local testing, I was able to upload non-image content with a `.jpg` extension.
+- **Image metadata:** The application saves EXIF metadata without sanitizing it. I tested injecting script-like text into metadata and inspecting what was stored in SQLite. **This is not proof of stored XSS executing in a browser**; the existing Jinja2 templates escape HTML output.
 
-## Safety and publication
-The baseline is intentionally vulnerable: **run only in an isolated local environment**. Do not publish `portfolio.db` (contains an admin bcrypt hash), session data, secrets, or uploaded user content. This documentation does not claim a completed fix or production compromise.
+I also noticed configuration issues involving JWT secrets and Docker privileges that I want to address.
+
+The original test payloads are not preserved in the current project snapshot. I'll add reproducible evidence as I repeat the tests.
+
+## What I'm working on next
+
+- Validate uploaded files by their actual image contents and limit upload size.
+- Handle untrusted EXIF metadata safely and verify the resulting HTML output.
+- Improve JWT configuration and run the Docker container as a non-root user.
+- Repeat the original tests and document what changed, with screenshots and code comparisons.
+
+## Project status
+
+**The application and initial security review are complete. Security fixes and retesting are still in progress.** This is a learning project, not a production-ready application or a formal penetration test.
+
+## Tech used
+
+Python · FastAPI · SQLite · SQLAlchemy · Jinja2 · Pillow · Docker · ExifTool
+
+---
+
+*This README is a starting point. I'll replace the project motivation and testing notes with my own explanation and evidence as I continue.*
