@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Admin Login — Photo Portfolio{% endblock %}
+{% block nav_extra %}{% endblock %}
+{% block content %}
+<div class="mx-auto max-w-sm">
+<h1 class="text-2xl font-semibold tracking-tight">Admin sign in</h1>
+<p class="mt-2 text-sm text-neutral-400">Manage the photos in your portfolio.</p>
+{% if error %}<div class="mt-6 rounded-lg border border-red-900/60 bg-red-950/40 px-4 py-3 text-sm text-red-200">{{ error }}</div>{% endif %}
+<form method="post" action="/admin/login" class="mt-6 space-y-4">
+<div><label for="username" class="block text-sm text-neutral-400 mb-1">Username</label>
+<input id="username" name="username" required autofocus class="w-full rounded-lg bg-neutral-900 ring-1 ring-neutral-800 px-3 py-2" /></div>
+<div><label for="password" class="block text-sm text-neutral-400 mb-1">Password</label>
+<input id="password" name="password" type="password" required class="w-full rounded-lg bg-neutral-900 ring-1 ring-neutral-800 px-3 py-2" /></div>
+<button type="submit" class="w-full rounded-lg bg-white px-4 py-2 font-medium text-neutral-900">Sign in</button>
+</form></div>{% endblock %}
